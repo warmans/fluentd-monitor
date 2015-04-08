@@ -268,7 +268,7 @@ func (handler *WebsocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
     defer client.Close()
 
     //start relaying messages to client
-    go client.StartSendisng()
+    go client.StartSending()
 
     //start listening for client messages
     client.StartListening();
