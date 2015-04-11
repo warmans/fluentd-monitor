@@ -2,7 +2,6 @@
 
 body {
   background-color : #161616;
-  padding-top: 20px;
 }
 
 //misc
@@ -20,12 +19,28 @@ body {
 
 //tables
 @table-bg:                      transparent;
-@table-bg-accent:               #2F2F2F;
-@table-bg-hover:                #2F2F2F;
-@table-border-color:            #2F2F2F;
+@table-bg-accent:               #1A1A1A;
+@table-bg-hover:                #1A1A1A;
+@table-border-color:            #161616;
+
+.panel .table {
+  margin-bottom: 0px;
+}
 
 .panel-body.numeric-status {
   text-align: center;
   font-size : 4em;
   font-weight: bold;
+}
+
+.change  {
+  font-size: 0.8em;
+}
+
+.change.inc {
+  .text-danger;
+}
+
+.change.dec {
+  .text-success;
 }

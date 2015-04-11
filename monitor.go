@@ -1,4 +1,5 @@
 package main
+
 import (
     "sync"
     "log"
@@ -21,9 +22,9 @@ type State struct {
     PluginCategory           string
     PluginType               string
     OutputPlugin             bool
-    CurBufferQueueLength     int
-    CurBufferTotalQueuedSize int
-    CurRetryCount            int
+    BufferQueueLength        []int
+    BufferTotalQueuedSize    []int
+    RetryCount               []int
 }
 
 type FMonitor struct {
@@ -36,7 +37,7 @@ type FMonitor struct {
 func (mon *FMonitor) Run() {
 
     go func(){
-        updateTicker := time.NewTicker(time.Second * 10)
+        updateTicker := time.NewTicker(time.Second * 5)
         for range updateTicker.C {
 
             //update all hosts in parallel
@@ -79,6 +80,7 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 
     //flatten trees into rows
     for _, plugin := range host.Plugins.Plugins {
+
         newState := &State{
             Host: host.Address,
             HostUp: host.Online,
@@ -88,19 +90,42 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
             PluginCategory: plugin.PluginCategory,
             PluginType: plugin.Type,
             OutputPlugin: plugin.OutputPlugin,
-            CurBufferQueueLength: plugin.BufferQueueLength,
-            CurBufferTotalQueuedSize: plugin.BufferTotalQueuedSize,
-            CurRetryCount: plugin.RetryCount}
+
+            BufferQueueLength: []int{plugin.BufferQueueLength},
+            BufferTotalQueuedSize: []int{plugin.BufferTotalQueuedSize},
+            RetryCount: []int{plugin.RetryCount}}
 
         //attempt existing row update
+        update := false
         for key, state := range mon.States {
             if newState.Host == state.Host && newState.PluginID == state.PluginID {
+                update = true
+                oldState := state
+
+                //replace old state
                 mon.States[key] = newState
-                return
+
+                //some values should hold a running history so...
+                if len(oldState.BufferQueueLength) >= 59 {
+                    oldState.BufferQueueLength = oldState.BufferQueueLength[1:]
+                }
+                mon.States[key].BufferQueueLength = append(oldState.BufferQueueLength, newState.BufferQueueLength[0])
+
+                if len(oldState.BufferTotalQueuedSize) >= 59 {
+                    oldState.BufferTotalQueuedSize = oldState.BufferTotalQueuedSize[1:]
+                }
+                mon.States[key].BufferTotalQueuedSize = append(oldState.BufferTotalQueuedSize, newState.BufferTotalQueuedSize[0])
+
+                if len(oldState.RetryCount) >= 59 {
+                    oldState.RetryCount = oldState.RetryCount[1:]
+                }
+                mon.States[key].RetryCount = append(oldState.RetryCount, newState.RetryCount[0])
             }
         }
         //else append new
-        mon.States = append(mon.States, newState)
+        if update == false {
+            mon.States = append(mon.States, newState)
+        }
     }
 }
 

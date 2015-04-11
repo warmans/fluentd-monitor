@@ -14,7 +14,16 @@ define([], function () {
 
         ws.$on('$open', function () {
             console.log('connected');
-            $scope.connected = true;
+            $scope.$apply(function() {
+                $scope.connected = true;
+            });
+        });
+
+        ws.$on('$close', function () {
+            console.log('disconnected');
+            $scope.$apply(function() {
+                $scope.connected = false;
+            });
         });
 
         ws.$on('$message', function (data) {
@@ -35,11 +44,6 @@ define([], function () {
                     }
                 });
             });
-        });
-
-        ws.$on('$close', function () {
-            console.log('disconnected');
-            $scope.connected = false;
         });
     }
 

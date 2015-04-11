@@ -15,7 +15,8 @@
     "angular": "~1.2.0",
     "angular-route": "~1.2.0",
     "bootstrap": "~3.2.0",
-    "ng-websocket": "~0.2.1"
+    "ng-websocket": "~0.2.1",
+    "jquery.sparkline.build": "~2.1.3"
   },
   "ignore": [
     "**/.*",

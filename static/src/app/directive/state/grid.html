@@ -1,8 +1,8 @@
-<table class="table">
+<table class="table table-striped">
     <thead>
     <tr>
-        <th style="width: 75px"></th>
         <th style="width: 300px">Host</th>
+        <th style="width: 100px">Host</th>
         <th>Category</th>
         <th>Retry Count</th>
         <th>Queue Length</th>
@@ -12,12 +12,12 @@
     </thead>
     <tbody>
         <tr ng-repeat="row in gridRows">
-            <td><span class="label" ng-class="{'label-success': row.HostUp, 'label-danger': !row.HostUp}">{{(row.HostUp ? "ONLINE" : "OFFLINE")}}</span></td>
-            <td>{{row.Host}} | {{row.PluginID}}</td>
+            <td><span class="label" ng-class="{'label-success': row.HostUp, 'label-danger': !row.HostUp}">{{(row.HostUp ? "ONLINE" : "OFFLINE")}}</span> {{row.Host}}</td>
+            <td> {{row.PluginID}}</td>
             <td>{{row.PluginCategory}}</td>
-            <td>{{row.CurRetryCount}}</td>
-            <td>{{row.CurBufferQueueLength}}</td>
-            <td>{{row.CurBufferTotalQueuedSize}}</td>
+            <td><span class="sparkline" sparkline ng-model="row.RetryCount"/> </td>
+            <td><span class="sparkline" sparkline ng-model="row.BufferQueueLength"/></td>
+            <td><span class="sparkline" sparkline ng-model="row.BufferTotalQueuedSize"/></td>
             <td>{{row.Timestamp}}</td>
         </tr>
     </tbody>

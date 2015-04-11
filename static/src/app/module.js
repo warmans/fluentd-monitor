@@ -1,9 +1,10 @@
 define([
     './controller/dashboard',
-    './directive/state/grid'
+    './directive/state/grid',
+    './directive/sparkline'
 ],
-function (dashboardController, statesGrid) {
-    var app = angular.module('monitor', ['ngRoute', 'ngWebsocket', 'angularGrid']);
+function (dashboardController, statesGridDirective, sparklineDirective) {
+    var app = angular.module('monitor', ['ngRoute', 'ngWebsocket']);
 
     //module config
     app.config(['$routeProvider', function($routeProvider){
@@ -19,6 +20,7 @@ function (dashboardController, statesGrid) {
     app.controller('dashboardController', dashboardController);
 
     //register directives
-    app.directive('stateGrid', statesGrid);
+    app.directive('stateGrid', statesGridDirective);
+    app.directive('sparkline', sparklineDirective);
 
 });

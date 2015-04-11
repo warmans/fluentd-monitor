@@ -15,8 +15,8 @@ module.exports = function(grunt) {
                       //bootstrap
                       'bower_components/jquery/dist/jquery.js',
                       'bower_components/bootstrap/dist/js/bootstrap.min.js',
-                      //grid
-                      'static/src/app/lib/angularGrid-latest.js',
+                      //misc
+                      'bower_components/jquery.sparkline.build/dist/jquery.sparkline.min.js',
                       //require
                       'bower_components/requirejs/require.js'
                   ],
