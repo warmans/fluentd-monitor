@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-body numeric-status text-success">
+                    {{numOnline}} Online
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-body numeric-status text-danger">
+                    {{numOffline}} Offline
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4 class="panel-title">Hosts</h4></div>
+                <state-grid rows="stateData"></state-grid>
+            </div>
+        </div>
+    </div>
+</div>

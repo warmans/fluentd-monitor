@@ -1,0 +1,24 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th style="width: 75px"></th>
+        <th style="width: 300px">Host</th>
+        <th>Category</th>
+        <th>Retry Count</th>
+        <th>Queue Length</th>
+        <th>Total Queued</th>
+        <th>Last Updated</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in gridRows">
+            <td><span class="label" ng-class="{'label-success': row.HostUp, 'label-danger': !row.HostUp}">{{(row.HostUp ? "ONLINE" : "OFFLINE")}}</span></td>
+            <td>{{row.Host}} | {{row.PluginID}}</td>
+            <td>{{row.PluginCategory}}</td>
+            <td>{{row.CurRetryCount}}</td>
+            <td>{{row.CurBufferQueueLength}}</td>
+            <td>{{row.CurBufferTotalQueuedSize}}</td>
+            <td>{{row.Timestamp}}</td>
+        </tr>
+    </tbody>
+</table>

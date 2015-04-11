@@ -16,6 +16,7 @@ type State struct {
     Host                     string
     HostUp                   bool
     HostError                string
+    Timestamp                int64
     PluginID                 string
     PluginCategory           string
     PluginType               string
@@ -55,7 +56,7 @@ func (mon *FMonitor) Run() {
         buffer := &bytes.Buffer{}
         encoder := json.NewEncoder(buffer)
 
-        if err := encoder.Encode(mon.GetStates()); err != nil {
+        if err := encoder.Encode(mon.GetStateUpdate()); err != nil {
             log.Print("Failed to encode host stats payload");
             continue
         }
@@ -65,7 +66,7 @@ func (mon *FMonitor) Run() {
     }
 }
 
-func (mon *FMonitor) GetStates() []*State {
+func (mon *FMonitor) GetStateUpdate() []*State {
     mon.StatesLock.RLock()
     defer mon.StatesLock.RUnlock()
 
@@ -82,6 +83,7 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
             Host: host.Address,
             HostUp: host.Online,
             HostError: host.LastError,
+            Timestamp: time.Now().Unix(),
             PluginID: plugin.PluginId,
             PluginCategory: plugin.PluginCategory,
             PluginType: plugin.Type,
