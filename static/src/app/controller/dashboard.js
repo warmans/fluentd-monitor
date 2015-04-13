@@ -45,6 +45,11 @@ define([], function () {
                 });
             });
         });
+
+        $scope.selectedRow = null;
+        $scope.onRowSelect = function(row) {
+            $scope.selectedRow = row;
+        };
     }
 
     controller.$inject=['$scope', '$websocket'];

@@ -1,24 +1,26 @@
 <table class="table table-striped">
     <thead>
-    <tr>
-        <th style="width: 300px">Host</th>
-        <th style="width: 100px">Host</th>
-        <th>Category</th>
-        <th>Retry Count</th>
-        <th>Queue Length</th>
-        <th>Total Queued</th>
-        <th>Last Updated</th>
-    </tr>
+        <tr>
+            <th style="width: 300px">Host</th>
+            <th style="width: 100px">Host</th>
+            <th>Category</th>
+            <th>Retry Count</th>
+            <th>Queue Length</th>
+            <th>Total Queued</th>
+            <th>Last Updated</th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="row in gridRows">
+        <tr ng-repeat="(key, row) in gridRows">
             <td><span class="label" ng-class="{'label-success': row.HostUp, 'label-danger': !row.HostUp}">{{(row.HostUp ? "ONLINE" : "OFFLINE")}}</span> {{row.Host}}</td>
-            <td> {{row.PluginID}}</td>
+            <td>{{row.PluginID}}</td>
             <td>{{row.PluginCategory}}</td>
-            <td><span class="sparkline" sparkline ng-model="row.RetryCount"/> </td>
-            <td><span class="sparkline" sparkline ng-model="row.BufferQueueLength"/></td>
-            <td><span class="sparkline" sparkline ng-model="row.BufferTotalQueuedSize"/></td>
-            <td>{{row.Timestamp}}</td>
+            <td><span sparkline class="sparkline" ng-model="row.RetryCount"></span></td>
+            <td><span sparkline class="sparkline" ng-model="row.BufferQueueLength"/></td>
+            <td><span sparkline class="sparkline" ng-model="row.BufferTotalQueuedSize"/></td>
+            <td>{{row.Timestamp | date}}</td>
+            <td><button ng-click="selectRow(row)" ng-class="{'btn-info': (selectedRow == row.ID)}" class="btn btn-xs btn-default">⇲</button></td>
         </tr>
     </tbody>
 </table>

@@ -14,6 +14,7 @@ import (
 //-----------------------------------------------
 
 type State struct {
+    ID                       string
     Host                     string
     HostUp                   bool
     HostError                string
@@ -21,6 +22,7 @@ type State struct {
     PluginID                 string
     PluginCategory           string
     PluginType               string
+    PluginConfig             map[string]interface{}
     OutputPlugin             bool
     BufferQueueLength        []int
     BufferTotalQueuedSize    []int
@@ -82,6 +84,7 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
     for _, plugin := range host.Plugins.Plugins {
 
         newState := &State{
+            ID: host.Address+"::"+plugin.PluginId,
             Host: host.Address,
             HostUp: host.Online,
             HostError: host.LastError,
@@ -89,6 +92,7 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
             PluginID: plugin.PluginId,
             PluginCategory: plugin.PluginCategory,
             PluginType: plugin.Type,
+            PluginConfig: plugin.Config,
             OutputPlugin: plugin.OutputPlugin,
 
             BufferQueueLength: []int{plugin.BufferQueueLength},
@@ -98,7 +102,8 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
         //attempt existing row update
         update := false
         for key, state := range mon.States {
-            if newState.Host == state.Host && newState.PluginID == state.PluginID {
+            if newState.ID == state.ID {
+
                 update = true
                 oldState := state
 

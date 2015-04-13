@@ -28,9 +28,20 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-12">
+        <div ng-class="{'col-lg-12': !selectedRow, 'col-lg-9': selectedRow}">
             <div class="panel panel-default">
-                <state-grid rows="stateData"></state-grid>
+                <state-grid rows="stateData" on-row-select="onRowSelect"></state-grid>
+            </div>
+        </div>
+        <div  ng-if="selectedRow" class="col-lg-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Selected Plugin
+                </div>
+                <table class="table table-striped">
+                    <tr><th>ID</th><td>{{selectedRow.ID}}</td></tr>
+                    <tr ng-repeat="(propName, propValue) in selectedRow.PluginConfig"><th>{{propName}}</th><td>{{propValue}}</td></tr>
+                </table>
             </div>
         </div>
     </div>

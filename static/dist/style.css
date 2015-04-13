@@ -6166,6 +6166,9 @@ button.close {
 body {
   background-color: #161616;
 }
+table tr td {
+  vertical-align: middle !important;
+}
 .panel .table {
   margin-bottom: 0px;
 }
@@ -6188,4 +6191,7 @@ a.change.inc:hover {
 }
 a.change.dec:hover {
   color: #2b542c;
+}
+.spark-last {
+  color: #999;
 }

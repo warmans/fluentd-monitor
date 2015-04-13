@@ -1,13 +1,24 @@
 define([], function(){
 
-    function directive($http) {
+    function directive() {
         return {
             templateUrl: '/static/src/app/directive/state/grid.html',
             restrict: 'E',
             scope: {
-                gridRows: '=rows'
+                gridRows: '=rows',
+                onRowSelect: '=onRowSelect'
             },
             link: function postLink(scope, element, attrs) {
+                scope.selectedRow = null;
+                scope.selectRow = function(row) {
+                    if (scope.selectedRow == row.ID) {
+                        scope.selectedRow = null;
+                        scope.onRowSelect(null);
+                    } else {
+                        scope.selectedRow = row.ID;
+                        scope.onRowSelect(row);
+                    }
+                };
             }
         }
     }
