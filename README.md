@@ -18,8 +18,15 @@ source is possible using `make install`.
 
 ### Developing
 
+Requires:
+- bower
+- npm
+- grunt-cli
+- esc (http://godoc.org/github.com/mjibson/esc)
+
 The front end files are by default embedded in static.go. They can be updated and rebuilt
 by doing the following:
 
 1. Checkout npm/bower sources `cd ui && npm install && bower install`
-2. Rebuild embedded files (from project root) `${GOPATH}/bin/esc -prefix="ui/static" -o static.go ui/static`
+2. Rebuild dist assets from sources `grunt`
+3. Rebuild embedded files (from project root) `${GOPATH}/bin/esc -prefix="ui/static" -o static.go ui/static`
