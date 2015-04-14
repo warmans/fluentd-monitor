@@ -67,12 +67,12 @@ func main() {
 	var staticFileServer http.Handler
 	if os.Getenv("DEV") == "true" {
 		log.Print("Running in DEV mode")
-		staticFileServer = http.StripPrefix("/ui/", http.FileServer(http.Dir("ui/static")))
+		staticFileServer = http.FileServer(http.Dir("ui/static"))
 	} else {
 		//in production use embedded files
 		staticFileServer = http.FileServer(FS(false))
 	}
-	http.Handle("/ui/", staticFileServer)
+	http.Handle("/ui/", http.StripPrefix("/ui/", staticFileServer))
 
 	//websocket
 	http.Handle("/ws", &WebsocketHandler{Hub: hub})

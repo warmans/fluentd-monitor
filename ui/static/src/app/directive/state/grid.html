@@ -19,7 +19,7 @@
             <td><span sparkline class="sparkline" ng-model="row.RetryCount"></span></td>
             <td><span sparkline class="sparkline" ng-model="row.BufferQueueLength"/></td>
             <td><span sparkline class="sparkline" ng-model="row.BufferTotalQueuedSize"/></td>
-            <td>{{row.Timestamp | date}}</td>
+            <td>{{(row.Timestamp *1000) | date}}</td>
             <td><button ng-click="selectRow(row)" ng-class="{'btn-info': (selectedRow == row.ID)}" class="btn btn-xs btn-default">⇲</button></td>
         </tr>
     </tbody>

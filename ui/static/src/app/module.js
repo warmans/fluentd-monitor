@@ -10,7 +10,7 @@ function (dashboardController, statesGridDirective, sparklineDirective) {
     app.config(['$routeProvider', function($routeProvider){
         $routeProvider
             .when('/dashboard', {
-                templateUrl: '/static/src/app/view/dashboard.html',
+                templateUrl: '/ui/src/app/view/dashboard.html',
                 controller: 'dashboardController'
             })
             .otherwise({redirectTo: '/dashboard'});

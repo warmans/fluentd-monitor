@@ -2,7 +2,7 @@ define([], function(){
 
     function directive() {
         return {
-            templateUrl: '/static/src/app/directive/state/grid.html',
+            templateUrl: '/ui/src/app/directive/state/grid.html',
             restrict: 'E',
             scope: {
                 gridRows: '=rows',
