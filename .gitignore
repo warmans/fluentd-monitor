@@ -2,3 +2,5 @@
 *.iml
 bower_components
 node_modules
+pkg
+fluentd-monitor

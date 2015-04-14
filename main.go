@@ -1,27 +1,23 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/websocket"
+	"github.com/spf13/viper"
 	"github.com/warmans/fluentd-api-client/monitoring"
 )
 
 var upgrader = &websocket.Upgrader{ReadBufferSize: 1024, WriteBufferSize: 1024, CheckOrigin: func(r *http.Request) bool { return true }}
 
-//-----------------------------------------------
-// HTTP Handler
-//-----------------------------------------------
-
+//WebsocketHandler handles websocket connections
 type WebsocketHandler struct {
 	Hub *Hub
 }
 
 func (handler *WebsocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("socket upgrade failed: ", err)
@@ -44,36 +40,39 @@ func (handler *WebsocketHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 	client.StartListening()
 }
 
-func InDevMode() bool {
-	if os.Getenv("DEV") == "true" {
-		return true
-	}
-	return false
-}
-
 func main() {
-	flag.Parse()
 
-	if InDevMode() {
-		log.Print("Running in DEV mode")
-	}
+	// Setup configuration
+	viper.SetConfigName("config")
+	viper.AddConfigPath("./config/")             //dev config (overrides live)
+	viper.AddConfigPath("/etc/fluentd-monitor/") //live config
+	viper.ReadInConfig()
 
+	//start the hub
 	hub := NewHub()
 	go hub.Run()
 
-	monitor := NewMonitor(hub, []*monitoring.Host{monitoring.NewHost("127.0.0.1:24220")})
+	//convert raw host addresses to Host instances
+	rawHosts := viper.GetStringSlice("hosts")
+	hosts := make([]*monitoring.Host, len(rawHosts))
+	for i, hostAddress := range rawHosts {
+		hosts[i] = monitoring.NewHost(hostAddress)
+	}
+
+	//start the monitor
+	monitor := NewMonitor(hub, hosts)
 	go monitor.Run()
 
 	//static assets
 	var staticFileServer http.Handler
-	if InDevMode() {
-		//in dev mode serve raw files
-		staticFileServer = http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
+	if os.Getenv("DEV") == "true" {
+		log.Print("Running in DEV mode")
+		staticFileServer = http.StripPrefix("/ui/", http.FileServer(http.Dir("ui/static")))
 	} else {
 		//in production use embedded files
 		staticFileServer = http.FileServer(FS(false))
 	}
-	http.Handle("/static/", staticFileServer)
+	http.Handle("/ui/", staticFileServer)
 
 	//websocket
 	http.Handle("/ws", &WebsocketHandler{Hub: hub})
@@ -82,11 +81,9 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
 			log.Print("redirect")
-			http.Redirect(w, r, "/static/", 301)
+			http.Redirect(w, r, "/ui/", 301)
 		}
 	})
 
-	if err := http.ListenAndServe(*flag.String("addr", ":8080", "http service address"), nil); err != nil {
-		log.Fatal("HTTP Server failed: ", err)
-	}
+	log.Fatal("HTTP Server failed: ", http.ListenAndServe(viper.GetString("listen"), nil))
 }
