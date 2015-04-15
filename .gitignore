@@ -1,6 +1,6 @@
 .idea
 *.iml
-bower_components
-node_modules
-pkg
-fluentd-monitor
+/ui/bower_components
+/ui/node_modules
+/pkg
+/fluentd-monitor
