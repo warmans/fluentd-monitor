@@ -6,7 +6,8 @@ define([], function(){
             restrict: 'E',
             scope: {
                 gridRows: '=rows',
-                onRowSelect: '=onRowSelect'
+                onRowSelect: '=onRowSelect',
+                filterValue: '=filter'
             },
             link: function postLink(scope, element, attrs) {
                 scope.selectedRow = null;

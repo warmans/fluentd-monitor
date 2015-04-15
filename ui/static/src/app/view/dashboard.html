@@ -1,10 +1,10 @@
 <nav class="navbar navbar-inverse navbar-top">
     <div class="container-fluid">
-        <p class="navbar-text navbar-right"><span class="label" ng-class="{'label-success': connected, 'label-danger': !connected}">OK</span></p>
+        <p class="navbar-text navbar-right" ng-class="{'online': connected, 'offline': !connected}">⬤</p>
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">
+            <span class="navbar-brand">
                 Fluentd Status
-            </a>
+            </span>
         </div>
     </div>
 </nav>
@@ -30,7 +30,14 @@
     <div class="row">
         <div ng-class="{'col-lg-12': !selectedRow, 'col-lg-9': selectedRow}">
             <div class="panel panel-default">
-                <state-grid rows="stateData" on-row-select="onRowSelect"></state-grid>
+                <div class="panel-heading">
+                    <form class="form-inline">
+                        <div class="form-group" style="width: 100%">
+                            <input class="form-control input-sm" style="width: 100%;" placeholder="filter" ng-model="filterKeyword"/>
+                        </div>
+                    </form>
+                </div>
+                <state-grid rows="stateData" on-row-select="onRowSelect" filter="filterKeyword"></state-grid>
             </div>
         </div>
         <div  ng-if="selectedRow" class="col-lg-3">

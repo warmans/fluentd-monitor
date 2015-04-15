@@ -6,6 +6,8 @@ define([], function () {
         $scope.numOnline = 0;
         $scope.numOffline = 0;
         $scope.connected = false;
+        $scope.filterCategory = 'output';
+        $scope.filterKeyword = '';
 
         var ws = $websocket.$new({
             url: "ws://"+location.host+"/ws",
@@ -29,14 +31,20 @@ define([], function () {
         ws.$on('$message', function (data) {
             $scope.$apply(function() {
 
-                $scope.stateData = data;
-
                 //reset
                 $scope.numOnline = 0;
                 $scope.numOffline = 0;
+                $scope.stateData = [];
 
                 //update online/offline
-                angular.forEach(data, function(row) {
+                angular.forEach(data, function(row, key) {
+
+                    if ($scope.filterCategory !== row.PluginCategory) {
+                        return;
+                    }
+
+                    $scope.stateData.push(row);
+
                     if (row.HostUp) {
                         $scope.numOnline++;
                     } else {

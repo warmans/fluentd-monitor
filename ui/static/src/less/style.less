@@ -1,31 +1,24 @@
 @import "bootstrap.less";
 
+@body-background: #161616;
+@panel-background: #1F1F1F;
+@panel-border: #2F2F2F;
+@text-color: #CCC;
+
 body {
-  background-color : #161616;
+  background-color : @body-background;
 }
 
-//misc
-@text-color: #ccc;
-
+//rounding
 @border-radius-base:        0px;
 @border-radius-large:       0px;
 @border-radius-small:       0px;
 
 //panels
-@panel-bg: #1F1F1F;
-@panel-default-text:          #ccc;
-@panel-default-border:        #2F2F2F;
-@panel-default-heading-bg:    #1F1F1F;
-
-//tables
-@table-bg:                      transparent;
-@table-bg-accent:               #1A1A1A;
-@table-bg-hover:                #1A1A1A;
-@table-border-color:            #161616;
-
-table tr td {
-  vertical-align: middle !important;
-}
+@panel-bg:                    @panel-background;
+@panel-default-text:          @text-color;
+@panel-default-border:        @panel-border;
+@panel-default-heading-bg:    @panel-background;
 
 .panel .table {
   margin-bottom: 0px;
@@ -37,6 +30,29 @@ table tr td {
   font-weight: bold;
 }
 
+//tables
+@table-bg:                      transparent;
+@table-bg-accent:               #1A1A1A;
+@table-bg-hover:                #1A1A1A;
+@table-border-color:            #161616;
+
+table tr td {
+  vertical-align: middle !important;
+}
+
+//forms
+@input-bg: darken(@panel-background, 2%);
+@input-border:  @input-bg;
+
+.radio-inline {
+  margin-bottom: -5px !important;
+}
+
+.form-inline .form-group {
+  margin-right: 20px !important;
+}
+
+//other
 .change  {
   font-size: 0.8em;
 }
@@ -49,6 +65,11 @@ table tr td {
   .text-success;
 }
 
-.spark-last {
-  color: #999;
+.online {
+  color: @state-success-text !important;
 }
+.offline {
+  color: @state-danger-text !important;
+}
+
+

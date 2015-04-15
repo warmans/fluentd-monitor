@@ -2342,9 +2342,9 @@ output {
   font-size: 14px;
   line-height: 1.42857143;
   color: #555555;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
   background-image: none;
-  border: 1px solid #cccccc;
+  border: 1px solid #1a1a1a;
   border-radius: 0px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -3490,7 +3490,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   color: #555555;
   text-align: center;
   background-color: #eeeeee;
-  border: 1px solid #cccccc;
+  border: 1px solid #1a1a1a;
   border-radius: 0px;
 }
 .input-group-addon.input-sm {
@@ -6166,9 +6166,6 @@ button.close {
 body {
   background-color: #161616;
 }
-table tr td {
-  vertical-align: middle !important;
-}
 .panel .table {
   margin-bottom: 0px;
 }
@@ -6176,6 +6173,15 @@ table tr td {
   text-align: center;
   font-size: 4em;
   font-weight: bold;
+}
+table tr td {
+  vertical-align: middle !important;
+}
+.radio-inline {
+  margin-bottom: -5px !important;
+}
+.form-inline .form-group {
+  margin-right: 20px !important;
 }
 .change {
   font-size: 0.8em;
@@ -6192,6 +6198,9 @@ a.change.inc:hover {
 a.change.dec:hover {
   color: #2b542c;
 }
-.spark-last {
-  color: #999;
+.online {
+  color: #3c763d !important;
+}
+.offline {
+  color: #a94442 !important;
 }
