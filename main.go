@@ -59,8 +59,19 @@ func main() {
 		hosts[i] = monitoring.NewHost(hostAddress)
 	}
 
-	//start the monitor
+	//create the monitor
 	monitor := NewMonitor(hub, hosts)
+	//configure
+	if viper.GetInt("history_size") > 0 {
+		monitor.HistorySize = viper.GetInt("history_size")
+	}
+	if viper.GetInt("history_tick_seconds") > 0 {
+		monitor.HistoryTickSeconds = viper.GetInt("history_tick_seconds")
+	}
+	if viper.GetInt("push_tick_seconds") > 0 {
+		monitor.PushTickSeconds = viper.GetInt("push_tick_seconds")
+	}
+	//start monitoring
 	go monitor.Run()
 
 	//static assets

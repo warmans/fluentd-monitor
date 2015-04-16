@@ -31,16 +31,19 @@ type State struct {
 }
 
 type FMonitor struct {
-	Hub        *Hub
-	Hosts      []*monitoring.Host
-	States     []*State
-	StatesLock sync.RWMutex
+	Hub                *Hub
+	Hosts              []*monitoring.Host
+	States             []State
+	StatesLock         sync.RWMutex
+	PushTickSeconds    int
+	HistoryTickSeconds int
+	HistorySize        int
 }
 
 func (mon *FMonitor) Run() {
 
 	go func() {
-		updateTicker := time.NewTicker(time.Second * 5)
+		updateTicker := time.NewTicker(time.Second * time.Duration(mon.HistoryTickSeconds))
 		for range updateTicker.C {
 
 			//update all hosts in parallel
@@ -53,7 +56,7 @@ func (mon *FMonitor) Run() {
 		}
 	}()
 
-	broadcastTicker := time.NewTicker(time.Second * 1)
+	broadcastTicker := time.NewTicker(time.Second * time.Duration(mon.PushTickSeconds))
 	for range broadcastTicker.C {
 
 		//Create a JSON payload
@@ -70,7 +73,7 @@ func (mon *FMonitor) Run() {
 	}
 }
 
-func (mon *FMonitor) GetStateUpdate() []*State {
+func (mon *FMonitor) GetStateUpdate() []State {
 	mon.StatesLock.RLock()
 	defer mon.StatesLock.RUnlock()
 
@@ -81,10 +84,12 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 	mon.StatesLock.Lock()
 	defer mon.StatesLock.Unlock()
 
-	//flatten trees into rows
+	activePlugins := make(map[string]bool, len(host.Plugins.Plugins))
+
+	//flatten trees into rows and merge metrics
 	for _, plugin := range host.Plugins.Plugins {
 
-		newState := &State{
+		newState := State{
 			ID:             host.Address + "::" + plugin.PluginId,
 			Host:           host.Address,
 			HostUp:         host.Online,
@@ -100,44 +105,60 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 			BufferTotalQueuedSize: []int{plugin.BufferTotalQueuedSize},
 			RetryCount:            []int{plugin.RetryCount}}
 
-		//attempt existing row update
-		update := false
-		for key, state := range mon.States {
-			if newState.ID == state.ID {
+		//keep track of currently active states
+		activePlugins[newState.ID] = true
 
-				update = true
-				oldState := state
+		//update existing states
+		stateHandled := false
+		for oldKey, oldState := range mon.States {
+			if newState.ID == oldState.ID {
 
-				//replace old state
-				mon.States[key] = newState
-
-				//some values should hold a running history so...
-				if len(oldState.BufferQueueLength) >= 59 {
+				if len(oldState.BufferQueueLength) >= mon.HistorySize-1 {
 					oldState.BufferQueueLength = oldState.BufferQueueLength[1:]
 				}
-				mon.States[key].BufferQueueLength = append(oldState.BufferQueueLength, newState.BufferQueueLength[0])
+				newState.BufferQueueLength = append(oldState.BufferQueueLength, newState.BufferQueueLength[0])
 
-				if len(oldState.BufferTotalQueuedSize) >= 59 {
+				if len(oldState.BufferTotalQueuedSize) >= mon.HistorySize-1 {
 					oldState.BufferTotalQueuedSize = oldState.BufferTotalQueuedSize[1:]
 				}
-				mon.States[key].BufferTotalQueuedSize = append(oldState.BufferTotalQueuedSize, newState.BufferTotalQueuedSize[0])
+				newState.BufferTotalQueuedSize = append(oldState.BufferTotalQueuedSize, newState.BufferTotalQueuedSize[0])
 
-				if len(oldState.RetryCount) >= 59 {
+				if len(oldState.RetryCount) >= mon.HistorySize-1 {
 					oldState.RetryCount = oldState.RetryCount[1:]
 				}
-				mon.States[key].RetryCount = append(oldState.RetryCount, newState.RetryCount[0])
+				newState.RetryCount = append(oldState.RetryCount, newState.RetryCount[0])
+
+				//replace in state list
+				mon.States[oldKey] = newState
+				stateHandled = true
 			}
 		}
-		//else append new
-		if update == false {
+		//or append new
+		if stateHandled == false {
 			mon.States = append(mon.States, newState)
+		}
+	}
+
+	//clean up redundant states (discard pluginIDs that are no longer reported by the host. PluginIDs are regenerated
+	//on restart by fluentd so you cannot easily identify plugins between restarts)
+	for i := 0; i < len(mon.States); i++ {
+		if host.Address == mon.States[i].Host {
+			if _, ok := activePlugins[mon.States[i].ID]; ok == false {
+				//splice out redundant state
+				mon.States = append(mon.States[:i], mon.States[i+1:]...)
+				//slice is not 1 element smaller (re-indexed by append) so we don't need to advance
+				i--
+			}
 		}
 	}
 }
 
 func NewMonitor(hub *Hub, hosts []*monitoring.Host) *FMonitor {
 	return &FMonitor{
-		Hub:    hub,
-		Hosts:  hosts,
-		States: make([]*State, 0)}
+		Hub:                hub,
+		Hosts:              hosts,
+		States:             make([]State, 0),
+		PushTickSeconds:    1,
+		HistoryTickSeconds: 10,
+		HistorySize:        60}
 }

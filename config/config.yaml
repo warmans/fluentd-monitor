@@ -1,5 +1,15 @@
+#HTTP Listen address
 listen: ":8080"
 
+#Push out updates every N seconds
+push_tick_seconds: 1
+
+#Append to history every N seconds
+history_tick_seconds: 10
+
+#Limit history to a maximum of N ticks (e.g. 60 with a 10 second history tick would show a 10min history)
+history_size: 60
+
+#Hosts to monitor
 hosts:
     - "127.0.0.1:24220"
-    - "localhost:24220"
