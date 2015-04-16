@@ -34,4 +34,4 @@ else
 fi
 
 #build RPM
-fpm --rpm-os el6 -s dir -p dist -t $TARGET -n fluentd-monitor -v $(cat version) -C $DESTDIR .
+fpm --rpm-os linux -s dir -p dist -t $TARGET -n fluentd-monitor -v $(cat version) -C $DESTDIR .
