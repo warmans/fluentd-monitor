@@ -34,4 +34,4 @@ else
 fi
 
 #build RPM
-fpm --rpm-os linux -s dir -p dist -t $TARGET -n fluentd-monitor -v $(cat version) -C $DESTDIR .
+fpm --rpm-os linux -s dir -p dist --config-files /etc/fluentd-monitor/config.yaml -t $TARGET -n fluentd-monitor -v $(cat version) -C $DESTDIR .
