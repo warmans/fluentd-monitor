@@ -3,7 +3,7 @@ Fluentd Monitor UI
 
 UI for fluentd plugin monitoring API (http://docs.fluentd.org/articles/monitoring#monitoring-agent).
 
-![Image](ui/static/img/screeenshot.png "Screenshot")
+![Image](ui/static/img/screenshot.png "Screenshot")
 
 ### Running
 
