@@ -3,6 +3,8 @@ Fluentd Monitor UI
 
 UI for fluentd plugin monitoring API (http://docs.fluentd.org/articles/monitoring#monitoring-agent).
 
+![Image](ui/static/img/screeenshot.png "Screenshot")
+
 ### Running
 
 The deployed config file will be located in `/etc/fluentd-monitor/`. This should
