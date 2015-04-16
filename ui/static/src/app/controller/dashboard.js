@@ -6,7 +6,6 @@ define([], function () {
         $scope.numOnline = 0;
         $scope.numOffline = 0;
         $scope.connected = false;
-        $scope.filterCategory = 'output';
         $scope.filterKeyword = '';
 
         var ws = $websocket.$new({
@@ -38,10 +37,6 @@ define([], function () {
 
                 //update online/offline
                 angular.forEach(data, function(row, key) {
-
-                    if ($scope.filterCategory !== row.PluginCategory) {
-                        return;
-                    }
 
                     $scope.stateData.push(row);
 
