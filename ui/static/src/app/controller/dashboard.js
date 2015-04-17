@@ -8,6 +8,34 @@ define([], function () {
         $scope.connected = false;
         $scope.filterKeyword = '';
 
+        $scope.chartData = [];
+        $scope.chartOptions = {
+            grid: { hoverable: true, borderWidth: 0},
+            series: { shadowSize: 0, stack: true },
+            lines : { lineWidth : 1, fill: true },
+            legend: { show: false },
+            tooltip: true,
+            tooltipOpts: {},
+            xaxis: { show: false },
+            yaxis: {
+                min: 0,
+                tickFormatter: function(val, axis) {
+                switch(true) {
+                    case val > 1000000000:
+                        return (val/1000000000).toFixed(2) + "B";
+                    case val > 1000000:
+                        return (val/1000000).toFixed(2) + "M";
+                    case val > 1000:
+                        return (val/1000).toFixed(2) + "K";
+                    default:
+                        return val;
+                }
+                  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+            },
+            colors: ['#0E86CC']
+        };
+
         var ws = $websocket.$new({
             url: "ws://"+location.host+"/ws",
             protocols: []
@@ -34,11 +62,16 @@ define([], function () {
                 $scope.numOnline = 0;
                 $scope.numOffline = 0;
                 $scope.stateData = [];
+                $scope.chartData = [];
 
                 //update online/offline
                 angular.forEach(data, function(row, key) {
 
+                    //update table
                     $scope.stateData.push(row);
+
+                    //update chart
+                    $scope.chartData.push({label: row.ID, data: row.BufferTotalQueuedSize.map(function(val, key) { return [key, val]; })});
 
                     if (row.HostUp) {
                         $scope.numOnline++;
@@ -46,6 +79,8 @@ define([], function () {
                         $scope.numOffline++;
                     }
                 });
+
+                console.log($scope.chartData);
             });
         });
 

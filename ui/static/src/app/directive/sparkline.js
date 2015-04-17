@@ -9,16 +9,16 @@ define([], function(){
                 //defaults
                 var opts = {
                     type: 'line',
-                    lineColor: 'rgba(255, 255, 255, 0.3)',
-                    fillColor: 'rgba(255, 255, 255, 0.2)',
+                    lineColor: 'rgba(14, 134, 204, 0.3)',
+                    fillColor: 'rgba(14, 134, 204, 0.2)',
                     normalRangeColor: 'transparent',
                     normalRangeMin: 0,
                     normalRangeMax: 0,
-                    spotColor: false,
+                    spotColor: '#0E86CC',
                     minSpotColor: false,
                     maxSpotColor: false,
                     drawNormalOnTop: false,
-                    height: 30,
+                    height: 30
                 };
 
                 opts.type = attrs.type || 'line';
