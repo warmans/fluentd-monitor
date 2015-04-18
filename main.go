@@ -61,6 +61,7 @@ func main() {
 
 	//create the monitor
 	monitor := NewMonitor(hub, hosts)
+
 	//configure
 	if viper.GetInt("history_size") > 0 {
 		monitor.HistorySize = viper.GetInt("history_size")
@@ -71,6 +72,7 @@ func main() {
 	if viper.GetInt("push_tick_seconds") > 0 {
 		monitor.PushTickSeconds = viper.GetInt("push_tick_seconds")
 	}
+
 	//start monitoring
 	go monitor.Run()
 
@@ -91,7 +93,6 @@ func main() {
 	//redirect / to static dir
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" {
-			log.Print("redirect")
 			http.Redirect(w, r, "/ui/", 301)
 		}
 	})
