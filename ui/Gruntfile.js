@@ -15,7 +15,6 @@ module.exports = function(grunt) {
                       'bower_components/angular-flot/angular-flot.js',
                       //jquery
                       'bower_components/jquery/dist/jquery.js',
-                      'bower_components/jquery-color/jquery.color.js',
                       //bootstrap
                       'bower_components/bootstrap/dist/js/bootstrap.min.js',
                       //flot

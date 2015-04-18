@@ -8,6 +8,11 @@ define([], function () {
         $scope.connected = false;
         $scope.filterKeyword = '';
 
+        $scope.selectedRow = null;
+        $scope.onRowSelect = function(row) {
+            $scope.selectedRow = row;
+        };
+
         $scope.chartData = [];
         $scope.chartOptions = {
             grid: { hoverable: true, borderWidth: 0},
@@ -20,17 +25,16 @@ define([], function () {
             yaxis: {
                 min: 0,
                 tickFormatter: function(val, axis) {
-                switch(true) {
-                    case val > 1000000000:
-                        return (val/1000000000).toFixed(2) + "B";
-                    case val > 1000000:
-                        return (val/1000000).toFixed(2) + "M";
-                    case val > 1000:
-                        return (val/1000).toFixed(2) + "K";
-                    default:
-                        return val;
-                }
-                  return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    switch(true) {
+                        case val > 1000000000:
+                            return (val/1000000000).toFixed(2) + "B";
+                        case val > 1000000:
+                            return (val/1000000).toFixed(2) + "M";
+                        case val > 1000:
+                            return (val/1000).toFixed(2) + "K";
+                        default:
+                            return val;
+                    }
                 }
             },
             colors: ['#0E86CC']
@@ -70,8 +74,13 @@ define([], function () {
                     //update table
                     $scope.stateData.push(row);
 
-                    //update chart
-                    $scope.chartData.push({label: row.ID, data: row.BufferTotalQueuedSize.map(function(val, key) { return [key, val]; })});
+                    //update chart with rows that have non-zero TotalQueued total
+                    if (row.BufferTotalQueuedSize.reduce(function(a, b) { return a + b; }) > 0) {
+                        $scope.chartData.push({
+                            label: row.ID,
+                            data: row.BufferTotalQueuedSize.map(function(val, key) { return [key, val]; })
+                        });
+                    }
 
                     if (row.HostUp) {
                         $scope.numOnline++;
@@ -79,15 +88,8 @@ define([], function () {
                         $scope.numOffline++;
                     }
                 });
-
-                console.log($scope.chartData);
             });
         });
-
-        $scope.selectedRow = null;
-        $scope.onRowSelect = function(row) {
-            $scope.selectedRow = row;
-        };
     }
 
     controller.$inject=['$scope', '$websocket'];
