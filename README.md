@@ -1,4 +1,4 @@
-Fluentd Monitor UI
+Fluentd Plugin Monitor
 ========================
 
 UI for fluentd plugin monitoring API (http://docs.fluentd.org/articles/monitoring#monitoring-agent).
@@ -32,3 +32,8 @@ by doing the following:
 1. Checkout npm/bower sources `cd ui && npm install && bower install`
 2. Rebuild dist assets from sources `grunt`
 3. Rebuild embedded files (from project root) `${GOPATH}/bin/esc -prefix="ui/static" -o static.go ui/static`
+
+During development it is possible to serve raw files from the ui/static directory by setting
+an environment variable:
+
+    DEV=true go run *.go
