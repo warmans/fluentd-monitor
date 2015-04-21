@@ -2,6 +2,9 @@ PREFIX=/usr/local
 GOBIN=${DESTDIR}${PREFIX}/bin
 PROJ=fluentd-monitor
 
+static:
+	${GOPATH}/bin/esc -prefix="ui/static" -o static.go ui/static
+
 build:
 	go get
 	go build
