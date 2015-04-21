@@ -1,8 +1,9 @@
 define([], function () {
 
-    function controller($scope, $websocket) {
+    function controller($scope, $websocket, filterFilter) {
 
-        $scope.stateData = [];
+        $scope.rawStateData = [];
+        $scope.filteredStateData = [];
         $scope.numOnline = 0;
         $scope.numOffline = 0;
         $scope.connected = false;
@@ -68,20 +69,10 @@ define([], function () {
                 $scope.stateData = [];
                 $scope.chartData = [];
 
+                $scope.rawStateData = data;
+
                 //update online/offline
                 angular.forEach(data, function(row, key) {
-
-                    //update table
-                    $scope.stateData.push(row);
-
-                    //update chart with rows that have non-zero TotalQueued total
-                    if (row.BufferTotalQueuedSize.reduce(function(a, b) { return a + b; }) > 0) {
-                        $scope.chartData.push({
-                            label: row.ID,
-                            data: row.BufferTotalQueuedSize.map(function(val, key) { return [key, val]; })
-                        });
-                    }
-
                     if (row.HostUp) {
                         $scope.numOnline++;
                     } else {
@@ -90,9 +81,27 @@ define([], function () {
                 });
             });
         });
+
+        $scope.$watch('rawStateData', function(newVal, oldVal) {
+
+            $scope.filteredStateData = filterFilter(newVal, $scope.filterKeyword);
+
+            //update overview graph
+            angular.forEach($scope.filteredStateData, function(row, key) {
+                //update chart with rows that have non-zero TotalQueued total
+                if (row.BufferTotalQueuedSize.reduce(function(a, b) { return a + b; }) > 0) {
+                    $scope.chartData.push({
+                        label: row.ID,
+                        data: row.BufferTotalQueuedSize.map(function(val, key) { return [key, val]; })
+                    });
+                }
+
+            });
+
+        });
     }
 
-    controller.$inject=['$scope', '$websocket'];
+    controller.$inject=['$scope', '$websocket', 'filterFilter'];
 
     return controller;
 });

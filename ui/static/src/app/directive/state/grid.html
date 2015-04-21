@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="(key, row) in gridRows | filter:filterValue">
+        <tr ng-repeat="(key, row) in gridRows">
             <td><span class="label" ng-class="{'label-success': row.HostUp, 'label-danger': !row.HostUp}">{{(row.HostUp ? "ONLINE" : "OFFLINE")}}</span> {{row.Host}}</td>
             <td>{{row.PluginCategory}}</td>
             <td>{{row.BufferTotalQueuedSize[row.BufferTotalQueuedSize.length-1] | number}}</td>
