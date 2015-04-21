@@ -16,7 +16,25 @@ Once the config is updated `service fluentd-monitor start` and check localhost:8
 ### Deploying
 
 Distributable packages (RPM etc.) can be built using the `package.sh` script. Installing from
-source is possible using `make install`.
+source is possible using `make install`. The `dist` directory contains the most recent packages.
+
+#### Nginx Proxy
+
+If you wish to proxy this application with nginx (e.g. to add authentication) some special configuration is required
+to allow the web-sockets to work correctly.
+
+Sample location block:
+
+```
+location / {
+    proxy_pass http://127.0.0.1:8080;
+    proxy_buffering off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+```
 
 ### Developing
 
