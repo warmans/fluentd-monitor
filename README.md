@@ -12,11 +12,13 @@ be updated with the target fluentd hosts.
 
 Once the config is updated `service fluentd-monitor start` and check localhost:8080 on the host.
 
-
 ### Deploying
 
-Distributable packages (RPM etc.) can be built using the `package.sh` script. Installing from
-source is possible using `make install`. The `dist` directory contains the most recent packages.
+Distributable packages (RPM etc.) can be built using `make package PACKAGE_TYPE=rpm`. Packaging requires the effing
+package manager. Supported package types can be found in the FPM docs. Alternatively use one of the packages in
+the dist directory.
+
+Installing from source is possible using `make install`.
 
 #### Nginx Proxy
 
@@ -49,7 +51,7 @@ by doing the following:
 
 1. Checkout npm/bower sources `cd ui && npm install && bower install`
 2. Rebuild dist assets from sources `grunt`
-3. Rebuild embedded files (from project root) `${GOPATH}/bin/esc -prefix="ui/static" -o static.go ui/static`
+3. Rebuild embedded files (from project root) `make static`
 
 During development it is possible to serve raw files from the ui/static directory by setting
 an environment variable:
