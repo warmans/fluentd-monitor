@@ -1,9 +1,13 @@
 define([
     './controller/dashboard',
+    './controller/head',
+
     './directive/state/grid',
-    './directive/sparkline'
+    './directive/sparkline',
+
+    './factory/head',
 ],
-function (dashboardController, statesGridDirective, sparklineDirective) {
+function (dashboardController, headController, statesGridDirective, sparklineDirective, headFactory) {
     var app = angular.module('monitor', ['ngRoute', 'ngWebsocket']);
 
     //module config
@@ -18,9 +22,13 @@ function (dashboardController, statesGridDirective, sparklineDirective) {
 
     //register controllers
     app.controller('dashboardController', dashboardController);
+    app.controller('headController', headController);
 
     //register directives
     app.directive('stateGrid', statesGridDirective);
     app.directive('sparkline', sparklineDirective);
+
+    //register factories
+    app.factory('pageHead', headFactory);
 
 });

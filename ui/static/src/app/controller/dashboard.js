@@ -1,6 +1,6 @@
 define([], function () {
 
-    function controller($scope, $websocket, filterFilter) {
+    function controller($scope, $websocket, filterFilter, pageHead) {
 
         $scope.rawStateData = [];
         $scope.filteredStateData = [];
@@ -79,6 +79,8 @@ define([], function () {
                         $scope.numOffline++;
                     }
                 });
+
+                pageHead.setTitlePrefix($scope.numOffline == 0 ? '&#10003;' : "("+$scope.numOffline+")");
             });
         });
 
@@ -101,7 +103,7 @@ define([], function () {
         });
     }
 
-    controller.$inject=['$scope', '$websocket', 'filterFilter'];
+    controller.$inject=['$scope', '$websocket', 'filterFilter', 'pageHead'];
 
     return controller;
 });
