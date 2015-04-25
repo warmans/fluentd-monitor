@@ -15,7 +15,8 @@ function (dashboardController, headController, statesGridDirective, sparklineDir
         $routeProvider
             .when('/dashboard', {
                 templateUrl: '/ui/src/app/view/dashboard.html',
-                controller: 'dashboardController'
+                controller: 'dashboardController',
+                reloadOnSearch: false
             })
             .otherwise({redirectTo: '/dashboard'});
     }]);
