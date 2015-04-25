@@ -80,7 +80,9 @@ define([], function () {
                     }
                 });
 
-                pageHead.setTitlePrefix($scope.numOffline == 0 ? '&#10003;' : "("+$scope.numOffline+")");
+                //notify via tab title
+                pageHead.setTitlePrefix($scope.numOffline == 0 ? '' : "("+$scope.numOffline+")");
+                pageHead.setFavicon($scope.numOffline == 0 ? 'fluentd-logo-green-16.png' : 'fluentd-logo-red-16.png');
             });
         });
 
