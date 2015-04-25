@@ -3,8 +3,8 @@ define([], function(){
     function factory($sce) {
 
         var title = 'Fluentd Monitor';
-
         var prefix ='';
+        var favicon = 'fluentd-logo-black-16.png';
 
         return {
             getTitle: function() {
@@ -15,6 +15,12 @@ define([], function(){
             },
             setTitle: function(newTitle) {
                 title = newTitle;
+            },
+            getFavicon: function() {
+                return favicon;
+            },
+            setFavicon: function(newFavicon) {
+                favicon = newFavicon;
             }
         };
     }
