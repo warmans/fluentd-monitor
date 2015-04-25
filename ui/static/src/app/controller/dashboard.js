@@ -1,13 +1,13 @@
 define([], function () {
 
-    function controller($scope, $websocket, filterFilter, pageHead) {
+    function controller($scope, $location, $websocket, filterFilter, pageHead) {
 
         $scope.rawStateData = [];
         $scope.filteredStateData = [];
         $scope.numOnline = 0;
         $scope.numOffline = 0;
         $scope.connected = false;
-        $scope.filterKeyword = '';
+        $scope.filterKeyword = $location.search().filter || '';
 
         $scope.selectedRow = null;
         $scope.onRowSelect = function(row) {
@@ -88,6 +88,10 @@ define([], function () {
 
         $scope.$watch('rawStateData', function(newVal, oldVal) {
 
+            //update URI with filter
+            $location.search('filter', $scope.filterKeyword);
+
+            //filter results
             $scope.filteredStateData = filterFilter(newVal, $scope.filterKeyword);
 
             //update overview graph
@@ -99,13 +103,12 @@ define([], function () {
                         data: row.BufferTotalQueuedSize.map(function(val, key) { return [key, val]; })
                     });
                 }
-
             });
 
         });
     }
 
-    controller.$inject=['$scope', '$websocket', 'filterFilter', 'pageHead'];
+    controller.$inject=['$scope', '$location', '$websocket', 'filterFilter', 'pageHead'];
 
     return controller;
 });
