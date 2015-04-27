@@ -21,7 +21,10 @@ define([], function () {
             lines : { lineWidth : 1, fill: true },
             legend: { show: false },
             tooltip: true,
-            tooltipOpts: {},
+            tooltipOpts: {
+                content: "%s: %y",
+                defaultTheme: false
+            },
             xaxis: { show: false },
             yaxis: {
                 min: 0,
