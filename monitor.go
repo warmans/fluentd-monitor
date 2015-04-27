@@ -10,34 +10,19 @@ import (
 	"github.com/warmans/fluentd-api-client/monitoring"
 )
 
-//-----------------------------------------------
-// Fuentd Status Monitor
-//-----------------------------------------------
-
-type State struct {
-	ID                    string
-	Host                  string
-	HostUp                bool
-	HostError             string
-	Timestamp             int64
-	PluginID              string
-	PluginCategory        string
-	PluginType            string
-	PluginConfig          map[string]interface{}
-	OutputPlugin          bool
-	BufferQueueLength     []int
-	BufferTotalQueuedSize []int
-	RetryCount            []int
-}
-
 type FMonitor struct {
 	Hub                *Hub
 	Hosts              []*monitoring.Host
-	States             []State
+	States             []PluginState
+	StateChecks        []PluginStateVisitor
 	StatesLock         sync.RWMutex
 	PushTickSeconds    int
 	HistoryTickSeconds int
 	HistorySize        int
+}
+
+func (mon *FMonitor) AddStateCheck(vi PluginStateVisitor) {
+	mon.StateChecks = append(mon.StateChecks, vi)
 }
 
 func (mon *FMonitor) Run() {
@@ -73,7 +58,7 @@ func (mon *FMonitor) Run() {
 	}
 }
 
-func (mon *FMonitor) GetStateUpdate() []State {
+func (mon *FMonitor) GetStateUpdate() []PluginState {
 	mon.StatesLock.RLock()
 	defer mon.StatesLock.RUnlock()
 
@@ -89,7 +74,7 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 	//flatten trees into rows and merge metrics
 	for _, plugin := range host.Plugins.Plugins {
 
-		newState := State{
+		newState := PluginState{
 			ID:             host.Address + "::" + plugin.PluginId,
 			Host:           host.Address,
 			HostUp:         host.Online,
@@ -103,7 +88,9 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 
 			BufferQueueLength:     []int{plugin.BufferQueueLength},
 			BufferTotalQueuedSize: []int{plugin.BufferTotalQueuedSize},
-			RetryCount:            []int{plugin.RetryCount}}
+			RetryCount:            []int{plugin.RetryCount},
+
+			Warnings: 			   []string{}}
 
 		//keep track of currently active states
 		activePlugins[newState.ID] = true
@@ -133,9 +120,15 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 				stateHandled = true
 			}
 		}
+
 		//or append new
 		if stateHandled == false {
 			mon.States = append(mon.States, newState)
+		}
+
+		//apply checks
+		for _, check := range mon.StateChecks {
+			newState.Accept(check)
 		}
 	}
 
@@ -146,7 +139,7 @@ func (mon *FMonitor) AddState(host *monitoring.Host) {
 			if _, ok := activePlugins[mon.States[i].ID]; ok == false {
 				//splice out redundant state
 				mon.States = append(mon.States[:i], mon.States[i+1:]...)
-				//slice is not 1 element smaller (re-indexed by append) so we don't need to advance
+				//slice is now 1 element smaller (re-indexed by append) so we don't need to advance
 				i--
 			}
 		}
@@ -157,7 +150,7 @@ func NewMonitor(hub *Hub, hosts []*monitoring.Host) *FMonitor {
 	return &FMonitor{
 		Hub:                hub,
 		Hosts:              hosts,
-		States:             make([]State, 0),
+		States:             make([]PluginState, 0),
 		PushTickSeconds:    1,
 		HistoryTickSeconds: 10,
 		HistorySize:        60}

@@ -9,6 +9,10 @@ static:
 
 	${GOPATH}/bin/esc -prefix="ui/static" -o static.go ui/static
 
+test:
+
+	@go test
+
 build:
 
 	go get
