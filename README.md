@@ -56,4 +56,8 @@ by doing the following:
 During development it is possible to serve raw files from the ui/static directory by setting
 an environment variable:
 
-    DEV=true go run *.go
+    DEV=true go run main.go state.go static.go monitor.go clients.go
+
+Running tests is done in the usual way:
+
+    go test

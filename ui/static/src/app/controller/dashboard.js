@@ -66,6 +66,7 @@ define([], function () {
                 //reset
                 $scope.numOnline = 0;
                 $scope.numOffline = 0;
+                $scope.numWarnings = 0;
                 $scope.stateData = [];
                 $scope.chartData = [];
 
@@ -73,6 +74,8 @@ define([], function () {
 
                 //update online/offline
                 angular.forEach(data, function(row, key) {
+                    $scope.numWarnings += row.Warnings.length;
+
                     if (row.HostUp) {
                         $scope.numOnline++;
                     } else {

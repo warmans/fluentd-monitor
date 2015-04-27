@@ -73,6 +73,9 @@ func main() {
 		monitor.PushTickSeconds = viper.GetInt("push_tick_seconds")
 	}
 
+	//analyze plugin data for insights
+	monitor.AddStateCheck(&BufferWarningVisitor{})
+
 	//start monitoring
 	go monitor.Run()
 

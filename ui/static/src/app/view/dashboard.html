@@ -20,15 +20,15 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="panel panel-default">
-                <div class="panel-body numeric-status text-success">
-                    {{numOnline}} Online
+                <div class="panel-body numeric-status" ng-class="{'text-success': (numWarnings == 0), 'text-warning': (numWarnings > 0)}">
+                    {{numOnline}} UP
                 </div>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="panel panel-default">
                 <div class="panel-body numeric-status text-danger">
-                    {{numOffline}} Offline
+                    {{numOffline}} DN
                 </div>
             </div>
         </div>
@@ -55,6 +55,14 @@
                 <table class="table table-striped">
                     <tr><th>ID</th><td>{{selectedRow.ID}}</td></tr>
                     <tr ng-repeat="(propName, propValue) in selectedRow.PluginConfig"><th>{{propName}}</th><td>{{propValue}}</td></tr>
+                </table>
+            </div>
+            <div class="panel panel-default" ng-if="selectedRow.Warnings.length > 0">
+                <div class="panel-heading">
+                    Warnings
+                </div>
+                <table class="table table-striped">
+                    <tr ng-repeat="warning in selectedRow.Warnings"><td>{{warning}}</td></tr>
                 </table>
             </div>
         </div>
