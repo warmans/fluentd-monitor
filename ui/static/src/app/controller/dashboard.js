@@ -85,7 +85,15 @@ define([], function () {
 
                 //notify via tab title
                 pageHead.setTitlePrefix($scope.numOffline == 0 ? '' : "("+$scope.numOffline+")");
-                pageHead.setFavicon($scope.numOffline == 0 ? 'fluentd-logo-green-16.png' : 'fluentd-logo-red-16.png');
+                if ($scope.numOffline == 0) {
+                    if ($scope.numWarnings == 0) {
+                        pageHead.setFavicon('fluentd-logo-green-16.png');
+                    } else {
+                        pageHead.setFavicon('fluentd-logo-orange-16.png');
+                    }
+                } else {
+                    pageHead.setFavicon('fluentd-logo-red-16.png');
+                }
             });
         });
 
