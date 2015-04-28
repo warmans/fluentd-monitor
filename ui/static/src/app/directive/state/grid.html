@@ -3,10 +3,10 @@
         <tr>
             <th style="width: 300px">Host</th>
             <th>Category</th>
-            <th>Total Queued</th>
-            <th>Total Queued Trend</th>
-            <th>Queue Length Trend</th>
-            <th>Retry Trend</th>
+            <th>Cur Queued</th>
+            <th>Total Queued (bytes)</th>
+            <th>Queue Length (files)</th>
+            <th>Retries</th>
             <!--th>Last Updated</th-->
             <th></th>
         </tr>
@@ -15,12 +15,12 @@
         <tr ng-repeat="(key, row) in gridRows">
             <td><span class="label" ng-class="{'label-success': (row.HostUp && row.Warnings.length == 0), 'label-warning': (row.HostUp && row.Warnings.length > 0), 'label-danger': !row.HostUp}">{{(row.HostUp ? "ONLINE" : "OFFLINE")}}</span> {{row.Host}}</td>
             <td>{{row.PluginCategory}}</td>
-            <td>{{row.BufferTotalQueuedSize[row.BufferTotalQueuedSize.length-1] | number}}</td>
+            <td>{{row.BufferTotalQueuedSize[row.BufferTotalQueuedSize.length-1] | bytes}}</td>
             <td><span sparkline class="sparkline" ng-model="row.BufferTotalQueuedSize"/></td>
             <td><span sparkline class="sparkline" ng-model="row.BufferQueueLength"/></td>
             <td><span sparkline class="sparkline" ng-model="row.RetryCount"></span></td>
             <!--td>{{(row.Timestamp *1000) | date}}</td-->
-            <td><button ng-click="selectRow(row)" ng-class="{'btn-info': (selectedRow == row.ID)}" class="btn btn-xs btn-default">⇲</button></td>
+            <td><button ng-click="selectRow(row)" ng-class="{'btn-info': (selectedRow == row.ID)}" class="btn btn-xs btn-primary">etc.</button></td>
         </tr>
     </tbody>
 </table>

@@ -1,6 +1,6 @@
 define([], function () {
 
-    function controller($scope, $location, $websocket, filterFilter, pageHead) {
+    function controller($scope, $location, $websocket, filterFilter, pageHead, bytesFormatter) {
 
         $scope.rawStateData = [];
         $scope.filteredStateData = [];
@@ -28,18 +28,7 @@ define([], function () {
             xaxis: { show: false },
             yaxis: {
                 min: 0,
-                tickFormatter: function(val, axis) {
-                    switch(true) {
-                        case val > 1000000000:
-                            return (val/1000000000).toFixed(2) + "B";
-                        case val > 1000000:
-                            return (val/1000000).toFixed(2) + "M";
-                        case val > 1000:
-                            return (val/1000).toFixed(2) + "K";
-                        default:
-                            return val;
-                    }
-                }
+                tickFormatter: bytesFormatter.format
             },
             colors: ['#0E86CC']
         };
@@ -122,7 +111,7 @@ define([], function () {
         });
     }
 
-    controller.$inject=['$scope', '$location', '$websocket', 'filterFilter', 'pageHead'];
+    controller.$inject=['$scope', '$location', '$websocket', 'filterFilter', 'pageHead', 'bytesFormatter'];
 
     return controller;
 });

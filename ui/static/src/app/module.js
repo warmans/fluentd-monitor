@@ -6,8 +6,12 @@ define([
     './directive/sparkline',
 
     './factory/head',
+    './factory/bytes',
+
+    './filter/bytes',
 ],
-function (dashboardController, headController, statesGridDirective, sparklineDirective, headFactory) {
+function (dashboardController, headController, statesGridDirective, sparklineDirective, headFactory, bytesFormatterFactory, bytesFilter) {
+
     var app = angular.module('monitor', ['ngRoute', 'ngWebsocket']);
 
     //module config
@@ -31,5 +35,9 @@ function (dashboardController, headController, statesGridDirective, sparklineDir
 
     //register factories
     app.factory('pageHead', headFactory);
+    app.factory('bytesFormatter', bytesFormatterFactory);
+
+    //register filters
+    app.filter('bytes', bytesFilter);
 
 });
