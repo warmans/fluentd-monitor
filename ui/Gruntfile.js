@@ -32,6 +32,13 @@ module.exports = function(grunt) {
               }
           }
         },
+        uglify: {
+            dist: {
+                files: {
+                    'static/dist/vendor.min.js': ['static/dist/vendor.js']
+                }
+            }
+        },
         less: {
             production: {
                 options: {
@@ -51,6 +58,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
-    grunt.registerTask('default', ['concat', 'less']);
+    grunt.registerTask('default', ['concat', 'uglify', 'less']);
 }
