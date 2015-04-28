@@ -2,5 +2,6 @@
 *.iml
 /ui/bower_components
 /ui/node_modules
+/ui/static/dist/vendor.js
 /pkg
 /fluentd-monitor
